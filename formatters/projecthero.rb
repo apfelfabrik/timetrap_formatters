@@ -1,5 +1,3 @@
-require "byebug"
-
 class Timetrap::Formatters::Projecthero
   def initialize(entries)
     @entries = entries
