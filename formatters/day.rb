@@ -2,6 +2,7 @@ class Timetrap::Formatters::Day
   include Timetrap::Helpers
 
   DATE_FORMAT = '%Y/%m/%d'
+  TIME_FORMAT = '%H:%M'
 
   def initialize(entries)
     @entries = entries
@@ -23,6 +24,8 @@ class Timetrap::Formatters::Day
     percentage = ((todays_duration/@total_day_target)*100).to_i
     output << '[' << progress_bar(percentage) << '] ' << percentage.to_s << "%\n"
     output << format_total(todays_entries)
+    end_time = Time.new + @total_day_target - todays_duration
+    output << ' (out at ' << end_time.strftime(TIME_FORMAT) << ')'
     return output
   end
 
