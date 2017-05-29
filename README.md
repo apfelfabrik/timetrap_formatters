@@ -46,6 +46,11 @@ parameter
 
     day_exclude_sheets => a list of sheet names to exclude from calculations
 
+A countdown of the remaining time in your working day can be displayed when an
+optional parameter is set
+
+    day_countdown => true to show the countdown
+
 
 ### Datesheet
 
@@ -78,6 +83,25 @@ See https://github.com/samg/timetrap/issues#issue/13 for more details.
                                                  2:00:00
         ---------------------------------------------------------
         Total                                    6:00:00
+
+### Fraction
+
+The *fraction* formatter is also like the default *text* formatter. In addition
+to the information that is normally shown, it show the duration of the entry as
+a fraction of an hour. This is useful for entry into some time accounting
+systems.
+
+    $ t d -ffraction
+    Timesheet: mysheet
+        Day                Start   End     Duration        Notes
+        Wed Apr 23, 2014   10:12 - 10:15   0:02:23   0.04  entry
+                           14:29 - 14:57   0:28:05   0.47
+                           14:57 - 15:14   0:17:05   0.28  note
+                           15:14 - 15:51   0:36:57   0.62
+                           15:51 - 15:53   0:01:58   0.03
+                                           1:26:28   1.44
+        ---------------------------------------------------------
+        Total                              5:12:47   5.21
 
 ### LaTeX Invoice
 The *invoice* formatter generates LaTeX output that will create a nice looking
@@ -128,6 +152,58 @@ Also supports prefixes and suffixes, so to have your pay printed in dollars, set
 which will be printed after each pay amount as such: `$3.14M` if you make, say,
 3.14 million USD per hour.
 
+### total formatter
+
+This formatter simply displays the total amount of hours logged on this
+timesheet as a decimal number.
+
+```
+$ t d -ftotal
+4.709
+```
+
+### Harvest formatter
+
+The Harvest formatter, developed separately as the [timetrap-harvest][timetrap-harvest] gem, will
+submit your timetrap entries to timesheets on Harvest.
+
+After adding Harvest credentials and project/task alias definitions to your
+timetrap config file, you can tag entries for harvesting:
+
+```bash
+$ timetrap in working on timetrap-harvest @code
+$ timetrap out
+```
+
+When you're ready to submit, you can use `timetrap` to limit the range of your
+entries.
+
+For example, you can submit your entries at the end of the day:
+
+```bash
+$ timetrap today --format harvest
+```
+
+Or for the past week:
+
+```bash
+$ timetrap display --start 'last monday' --end 'last friday' --format harvest
+```
+
+The output will list entries that `timetrap-harvest` successfully submitted as
+well as entries that `timetrap-harvest` failed to submit.
+
+```bash
+Submitted: 1
+Failed: 0
+
+Submitted entries
+--------------------------------------------------------------------------------
+Submitted: working on timetrap-harvest @code
+```
+
+See timetrap-harvest's [README](timetrap-harvest) for more details.
+
 ## Contributing
 
 To contribute a formatter:
@@ -141,3 +217,5 @@ To contribute a formatter:
 Bugs and Feature Requests
 --------
 Submit to http://github.com/samg/timetrap/issues
+
+[timetrap-harvest]: https://github.com/dblandin/timetrap-harvest
